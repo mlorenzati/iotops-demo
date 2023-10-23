@@ -1,36 +1,52 @@
-name: 'Destroy Infrastructure'
+name: "Destroy Infrastructure"
 
 on:
-  workflow_dispatch: # Allows you to run this workflow manually from the GitHub Actions tab
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to destroy"
+        required: true
+        default: "iotops-demo"
 
 jobs:
-  destroy:
-    name: 'Terraform Destroy'
+  terraform-destroy:
     runs-on: ubuntu-latest
+
     environment:
-      name: 'iotops-demo'
-    
+      name: ${{ github.event.inputs.environment }} # Dynamically set the environment based on input
+
     defaults:
       run:
-        working-directory: ./terraform # Adjust if your Terraform files are in a different directory
+        working-directory: ./terraform
 
     steps:
-    - name: 'Check out repository code'
-      uses: actions/checkout@v2
+      - name: "Check out repository code"
+        uses: actions/checkout@v2
 
-    - name: 'Configure Terraform CLI'
-      uses: hashicorp/setup-terraform@v1
+      - name: "Set up Azure CLI"
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: 'Set up Azure CLI'
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }} # Ensure this secret is set in the repository or environment secrets
+      - name: Setup Authentication for Terraform
+        run: |
+          echo "ARM_SUBSCRIPTION_ID=$(az account show --query="id" -o tsv)" >> $GITHUB_ENV
+          echo "ARM_CLIENT_ID=$(az account show --query="user.name" -o tsv)" >> $GITHUB_ENV
+          echo "ARM_CLIENT_SECRET=$(jq '.clientSecret' -r <<< '${{ secrets.AZURE_CREDENTIALS }}')" >> $GITHUB_ENV
+          echo "ARM_TENANT_ID=$(az account show --query="tenantId" -o tsv)" >> $GITHUB_ENV
+          echo "ARM_SKIP_PROVIDER_REGISTRATION=true" >> $GITHUB_ENV
 
-    - name: 'Initialize Terraform'
-      run: terraform init
+      - name: "Initialize Terraform"
+        run: terraform init
 
-    - name: 'Terraform Destroy'
-      run: terraform destroy -auto-approve
+      - name: "Terraform Plan for Destruction"
+        run: terraform plan -destroy -out=tfplan
+        continue-on-error: true # If planning fails, continue to the next step for potential cleanup or reporting
 
-    - name: 'Logout from Azure CLI'
-      run: az logout
+      - name: "Terraform Destroy"
+        if: ${{ success() }} # Proceed with destruction only if the 'plan' step was successful
+        run: terraform apply -auto-approve tfplan
+
+      - name: "Cleanup: Azure Logout" # Making it clear this is a cleanup step
+        if: always() # Always run this step to logout, even if a previous step fails
+        run: az logout

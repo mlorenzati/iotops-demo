@@ -9,7 +9,7 @@ on:
         default: "iotops-demo"
 
 jobs:
-  deploy:
+  terraform-deploy:
     runs-on: ubuntu-latest
 
     environment:
