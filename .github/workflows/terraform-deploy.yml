@@ -1,0 +1,47 @@
+name: 'Terraform Deploy'
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'iotops-demo'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # The type of runner that the job will run on
+
+    environment: iotops-demo  # Reference for the environment that will be used
+
+    defaults:
+      run:
+        working-directory: terraform  # Set default working directory for steps
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+
+    - name: Terraform Init
+      run: terraform init
+
+    # Terraform plan and save the proposed plan as an artifact
+    - name: Terraform Plan
+      run: terraform plan -out=tfplan
+      continue-on-error: true  # Continue to the next step even if 'plan' fails
+
+    # Apply only if 'plan' was successful
+    - name: Terraform Apply
+      if: ${{ success() }}
+      run: terraform apply -auto-approve tfplan
+
+    - name: Azure Logout
+      run: az logout

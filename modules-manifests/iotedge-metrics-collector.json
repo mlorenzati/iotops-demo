@@ -1,0 +1,39 @@
+{
+    "modulesContent": {
+        "$edgeAgent": {
+            "properties.desired.modules.IoTEdgeMetricsCollector": {
+                "env": {
+                    "ResourceId": {
+                        "value": "/subscriptions/ba2f9e93-3797-4ec8-bfe3-50e28ddba81a/resourceGroups/rgraw3qaiot/providers/Microsoft.Devices/IotHubs/ithacuqaiotdvcstreams"
+                    },
+                    "UploadTarget": {
+                        "value": "AzureMonitor"
+                    },
+                    "LogAnalyticsWorkspaceId": {
+                        "value": "d121ca8c-f78d-4aa3-91a0-a83541210830"
+                    },
+                    "LogAnalyticsSharedKey": {
+                        "value": "O8w+upECl6seUWwM2HybAYQ2K/YbKBzuqyf5NmFFWvIAlIC69xhlk1IMT+CkDo/sMxA1wi1zbofAgW2eUveacg=="
+                    },
+                    "ScrapeFrequencyInSecs": {
+                        "value": "600"
+                    },
+                    "MetricsEndpointsCSV": {
+                        "value": "http://edgeAgent:9600/metrics, http://edgeHub:9600/metrics"
+                    }
+                },
+                "restartPolicy": "always",
+                "settings": {
+                    "image": "mcr.microsoft.com/azureiotedge-metrics-collector:1.1"
+                },
+                "status": "running",
+                "type": "docker"
+            }
+        },
+        "$edgeHub": {
+            "properties.desired.routes.FromMetricsCollectorToUpstream": {
+                "route": "FROM /messages/modules/IoTEdgeMetricsCollector/* INTO $upstream"
+            }
+        }
+    }
+}
