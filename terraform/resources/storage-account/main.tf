@@ -9,14 +9,9 @@ resource "azurerm_storage_account" "storage_account" {
   tags = var.tags
 }
 
-# Create Source Containers
+# Create Source Container
 resource "azurerm_storage_container" "container_data" {
   name                  = var.storage_container_name
-  storage_account_name  = azurerm_storage_account.storage_account.name
-  container_access_type = "private"
-}
-resource "azurerm_storage_container" "container_tfstate" {
-  name                  = "iotops-tfstate"
   storage_account_name  = azurerm_storage_account.storage_account.name
   container_access_type = "private"
 }
