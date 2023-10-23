@@ -10,38 +10,40 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # The type of runner that the job will run on
+    runs-on: ubuntu-latest
 
-    environment: iotops-demo  # Reference for the environment that will be used
+    environment: 
+      name: ${{ github.event.inputs.environment }} # Dynamically set the environment based on input
 
     defaults:
       run:
-        working-directory: terraform  # Set default working directory for steps
+        working-directory: ./terraform
 
     steps:
-    - name: Checkout
+    - name: 'Check out repository code'
       uses: actions/checkout@v2
 
-    - name: Azure Login
+    - name: 'Set up Azure CLI'
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Setup Terraform
+    - name: 'Set up Terraform'
       uses: hashicorp/setup-terraform@v1
+      with:
+        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }} # If using Terraform Cloud, this is where you'd provide the token
 
-    - name: Terraform Init
+    - name: 'Initialize Terraform'
       run: terraform init
 
-    # Terraform plan and save the proposed plan as an artifact
-    - name: Terraform Plan
+    - name: 'Terraform Plan'
       run: terraform plan -out=tfplan
-      continue-on-error: true  # Continue to the next step even if 'plan' fails
+      continue-on-error: true  # If planning fails, continue to the next step for potential cleanup or reporting
 
-    # Apply only if 'plan' was successful
-    - name: Terraform Apply
-      if: ${{ success() }}
+    - name: 'Terraform Apply'
+      if: ${{ success() }}  # Apply only if the 'plan' step was successful
       run: terraform apply -auto-approve tfplan
 
-    - name: Azure Logout
+    - name: 'Cleanup: Azure Logout'  # Making it clear this is a cleanup step
+      if: always()  # Always run this step to logout, even if a previous step fails
       run: az logout
