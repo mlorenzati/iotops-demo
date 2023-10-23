@@ -1,7 +1,6 @@
-# Create a Resource Group
-resource "azurerm_resource_group" "resource_group" {
-  name     = "rg-iot-ops"
-  location = "Brazil South"
+# Get the Resource Group
+data "azurerm_resource_group" "resource_group" {
+  name = "iotops-demo"
 }
 
 # Set common tags
@@ -16,8 +15,8 @@ locals {
 module "log_analytics" {
   source = "./resources/log-analytics"
 
-  location                     = azurerm_resource_group.resource_group.location
-  resource_group_name          = azurerm_resource_group.resource_group.name
+  location                     = data.azurerm_resource_group.resource_group.location
+  resource_group_name          = data.azurerm_resource_group.resource_group.name
   tags                         = local.common_tags
   diagnostic_setting_name      = var.diagnostic_setting_name
   log_analytics_workspace_name = var.log_analytics_workspace_name
@@ -27,8 +26,8 @@ module "log_analytics" {
 module "iot_hub" {
   source = "./resources/iot-hub"
 
-  location                       = azurerm_resource_group.resource_group.location
-  resource_group_name            = azurerm_resource_group.resource_group.name
+  location                       = data.azurerm_resource_group.resource_group.location
+  resource_group_name            = data.azurerm_resource_group.resource_group.name
   tags                           = local.common_tags
   iot_hub_name                   = var.iot_hub_name
   storage_container_name         = var.storage_container_name
@@ -38,8 +37,8 @@ module "iot_hub" {
 module "storage_account" {
   source = "./resources/storage-account"
 
-  location               = azurerm_resource_group.resource_group.location
-  resource_group_name    = azurerm_resource_group.resource_group.name
+  location               = data.azurerm_resource_group.resource_group.location
+  resource_group_name    = data.azurerm_resource_group.resource_group.name
   tags                   = local.common_tags
   storage_account_name   = var.storage_account_name
   storage_container_name = var.storage_container_name

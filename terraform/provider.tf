@@ -2,16 +2,16 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "3.77.0"
+      version = "3.76.0"
     }
   }
 
-  #   backend "azurerm" {
-  #     # resource_group_name  = "rg-iot-ops"
-  #     # storage_account_name = "iotops-storage-account"
-  #     # container_name       = "iotops-tfstate"
-  #     # key                  = "terraform.tfstate"
-  #   }
+  backend "azurerm" {
+    resource_group_name  = "iotops-demo"
+    storage_account_name = "iotopstfstate"
+    container_name       = "tfstate"
+    key                  = "iotops-terraform.tfstate"
+  }
 }
 
 provider "azurerm" {
