@@ -1,0 +1,36 @@
+name: 'Destroy Infrastructure'
+
+on:
+  workflow_dispatch: # Allows you to run this workflow manually from the GitHub Actions tab
+
+jobs:
+  destroy:
+    name: 'Terraform Destroy'
+    runs-on: ubuntu-latest
+    environment:
+      name: 'iotops-demo'
+    
+    defaults:
+      run:
+        working-directory: ./terraform # Adjust if your Terraform files are in a different directory
+
+    steps:
+    - name: 'Check out repository code'
+      uses: actions/checkout@v2
+
+    - name: 'Configure Terraform CLI'
+      uses: hashicorp/setup-terraform@v1
+
+    - name: 'Set up Azure CLI'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }} # Ensure this secret is set in the repository or environment secrets
+
+    - name: 'Initialize Terraform'
+      run: terraform init
+
+    - name: 'Terraform Destroy'
+      run: terraform destroy -auto-approve
+
+    - name: 'Logout from Azure CLI'
+      run: az logout
