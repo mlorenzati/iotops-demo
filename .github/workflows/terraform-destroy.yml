@@ -34,7 +34,6 @@ jobs:
           echo "ARM_CLIENT_ID=$(az account show --query="user.name" -o tsv)" >> $GITHUB_ENV
           echo "ARM_CLIENT_SECRET=$(jq '.clientSecret' -r <<< '${{ secrets.AZURE_CREDENTIALS }}')" >> $GITHUB_ENV
           echo "ARM_TENANT_ID=$(az account show --query="tenantId" -o tsv)" >> $GITHUB_ENV
-          echo "ARM_SKIP_PROVIDER_REGISTRATION=true" >> $GITHUB_ENV
 
       - name: "Initialize Terraform"
         run: terraform init
