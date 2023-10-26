@@ -1,0 +1,25 @@
+{
+    "modulesContent": {
+        "$edgeAgent": {
+            "properties.desired.modules.SimulatedTemperatureSensor": {
+                "restartPolicy": "always",
+                "settings": {
+                    "image": "mcr.microsoft.com/azureiotedge-simulated-temperature-sensor"
+                },
+                "status": "running",
+                "type": "docker"
+            }
+        },
+        "SimulatedTemperatureSensor": {
+            "properties.desired": {
+                "SendData": true,
+                "SendInterval": 1
+            }
+        },
+        "$edgeHub": {
+            "properties.desired.routes.SimulatedTemperatureSensorToIoTHub": {
+                "route": "FROM /messages/modules/SimulatedTemperatureSensor/* INTO $upstream"
+            }
+        }
+    }
+}
