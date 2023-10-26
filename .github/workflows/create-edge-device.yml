@@ -24,7 +24,7 @@ jobs:
   deploy:
     name: Deploy IoT Edge Device
     runs-on: ubuntu-latest
-    environment: iotops-demo
+    environment: ${{ github.event.inputs.environment }}
     defaults:
       run:
         shell: bash
@@ -37,7 +37,7 @@ jobs:
       - name: Azure Login
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_SP_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Create IoT Edge Deployment
         run: |
