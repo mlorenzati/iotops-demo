@@ -11,6 +11,10 @@ on:
         description: The name of the IoT Hub.
         required: true
         default: "iotops-hub"
+      environment:
+        description: "Environment to deploy to"
+        required: true
+        default: "iotops-demo"
 
 env:
   deployment_id: "${{ github.event.inputs.edge_device_id }}-base-deployment"
