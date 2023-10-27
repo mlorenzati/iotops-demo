@@ -18,7 +18,7 @@ on:
 
 env:
   deployment_id: "${{ github.event.inputs.edge_device_id }}-base-deployment"
-  device_json: "modules/iot-edge-base-deployment.json"
+  device_json: "deployments/iot-edge-base-deployment.json"
 
 jobs:
   deploy:
