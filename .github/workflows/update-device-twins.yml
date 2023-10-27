@@ -1,0 +1,52 @@
+name: Update Device Twins
+
+on:
+  workflow_dispatch:
+    inputs:
+      edge_device_id:
+        description: The ID of the edge device.
+        required: true
+        default: "iotops-edge"
+      iothub_name:
+        description: The name of the IoT Hub.
+        required: true
+        default: "iotops-hub"
+      environment:
+        description: "Environment to deploy to"
+        required: true
+        default: "iotops-demo"
+
+jobs:
+  deploy:
+    name: Update Device Twin Tags & Properties
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Update Device Twins
+        run: |
+          # Read the content of device-twins/twin_tags.json into a variable
+          tags=$(cat device-twins/twin_tags.json)
+
+          # Read the content of device-twins/twin_properties.json into a variable
+          properties=$(cat device-twins/twin_properties.json)
+
+          # update the deployment tag as specified
+          echo "Updating tags for target deployment..."
+          az iot hub device-twin update \
+            --hub-name ${{ github.event.inputs.iothub_name }} \
+            --device-id ${{ github.event.inputs.edge_device_id }} \
+            --tags "$tags" \
+            --desired "$properties"
