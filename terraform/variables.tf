@@ -31,5 +31,5 @@ variable "storage_container_name" {
 variable "location" {
   description = "The Azure Region where the resources will be created."
   type        = string
-  default     = "eastus3"
+  default     = "eastus2"
 }
