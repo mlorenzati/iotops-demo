@@ -27,3 +27,9 @@ variable "storage_container_name" {
   type        = string
   default     = "iotops-container"
 }
+
+variable "location" {
+  description = "The Azure Region where the resources will be created."
+  type        = string
+  default     = "eastus"
+}

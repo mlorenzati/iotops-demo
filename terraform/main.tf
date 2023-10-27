@@ -15,7 +15,7 @@ locals {
 module "log_analytics" {
   source = "./resources/log-analytics"
 
-  location                     = data.azurerm_resource_group.resource_group.location
+  location                     = var.location
   resource_group_name          = data.azurerm_resource_group.resource_group.name
   tags                         = local.common_tags
   diagnostic_setting_name      = var.diagnostic_setting_name
@@ -26,7 +26,7 @@ module "log_analytics" {
 module "iot_hub" {
   source = "./resources/iot-hub"
 
-  location                       = data.azurerm_resource_group.resource_group.location
+  location                       = var.location
   resource_group_name            = data.azurerm_resource_group.resource_group.name
   tags                           = local.common_tags
   iot_hub_name                   = var.iot_hub_name
@@ -37,7 +37,7 @@ module "iot_hub" {
 module "storage_account" {
   source = "./resources/storage-account"
 
-  location               = data.azurerm_resource_group.resource_group.location
+  location               = var.location
   resource_group_name    = data.azurerm_resource_group.resource_group.name
   tags                   = local.common_tags
   storage_account_name   = var.storage_account_name
