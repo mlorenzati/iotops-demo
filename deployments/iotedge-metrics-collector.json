@@ -10,10 +10,10 @@
                         "value": "AzureMonitor"
                     },
                     "LogAnalyticsWorkspaceId": {
-                        "value": "880d4ac1-6cf0-440d-b80a-75c4b82bb9da"
+                        "value": "4ac1085f-be6b-4beb-9406-0ed7fa3359ee"
                     },
                     "LogAnalyticsSharedKey": {
-                        "value": "fowHyqLV/tmpGFsod7xdRAA/A8d9+ntLV96R5shtqkUQIW2/ZI1lHzFHxz9v6nNeY9NYdXc6qqsNEUTwKS9PTQ=="
+                        "value": "L2VXiZ26eebEhe97bgASoYnMczUKFzG88pGDaX/CrFkxPnFMNKH2857WYX5r7EW+1uque4IeUlPoL5jX6mzqjw=="
                     },
                     "ScrapeFrequencyInSecs": {
                         "value": "60"
