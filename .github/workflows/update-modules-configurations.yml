@@ -13,7 +13,6 @@ on:
         default: "iotops-demo"
 
 env:
-  deployment_id: "local-deployment-${{ github.run_id }}"
   folder_path: "deployments/"
 
 jobs:
@@ -40,7 +39,7 @@ jobs:
           az config set extension.use_dynamic_install=yes_without_prompt
 
           # iterate over all json files in the specified folder
-          for manifest in ${{ env.deployment_id }}*.json
+          for manifest in ${{ env.folder_path }}*.json
           do
             # extract the filename to use as the deployment id
             deployment_id=$(basename "$manifest" .json)
