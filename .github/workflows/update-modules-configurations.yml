@@ -51,12 +51,12 @@ jobs:
               --deployment-id $deployment_id \
               --hub-name ${{ github.event.inputs.iothub_name }} \
               --content "$manifest" \
-              --target-condition "tags.deployment='$deployment_id'" \
+              --target-condition "tags.deviceType='TemperatureSensor'" \
               --priority 1 || \
             az iot edge deployment update \
               --deployment-id $deployment_id \
               --hub-name ${{ github.event.inputs.iothub_name }} \
               --content "$manifest" \
-              --target-condition "tags.deployment='$deployment_id'" \
+              --target-condition "tags.deviceType='TemperatureSensor'" \
               --priority 1
           done

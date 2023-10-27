@@ -6,7 +6,7 @@ on:
       edge_device_id:
         description: The ID of the edge device.
         required: true
-        default: "feli-rasp-iotops-edge"
+        default: "iotops-edge"
       iothub_name:
         description: The name of the IoT Hub.
         required: true
@@ -15,10 +15,6 @@ on:
         description: "Environment to deploy to"
         required: true
         default: "iotops-demo"
-
-env:
-  deployment_id: "${{ github.event.inputs.edge_device_id }}-base-deployment"
-  device_json: "deployments/iot-edge-base-deployment.json"
 
 jobs:
   deploy:
@@ -39,47 +35,6 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Create IoT Edge Deployment
-        run: |
-          az config set extension.use_dynamic_install=yes_without_prompt
-
-          # list existing deployments
-          deployment_list=$(az iot edge deployment list --hub-name ${{ github.event.inputs.iothub_name }} | sed -nr 's/\s*"id": "(.*)".*/|\1|/p' )
-
-          echo "Edge Device Deployment"
-          echo "-----------------------------------------"
-          echo "Deployment:   ${{ env.deployment_id }}"
-          echo "Modules:      ${{ env.device_json }}"
-          echo "-----------------------------------------"
-
-          cp ${{ env.device_json }} temp.json
-
-          # check for matching (existing) deployments
-          matched=$( echo "${deployment_list}" | sed -nr "s/\|${{ env.deployment_id }}\|/found/p" )
-
-          # if there's no match, create a new deployment
-          if [ -z $matched ]; then
-            echo "Creating new edge device deployment..."
-            az iot edge deployment create \
-              --deployment-id ${{ env.deployment_id }} \
-              --hub-name ${{ github.event.inputs.iothub_name }} \
-              --content temp.json \
-              --target-condition "tags.deployment='${{ env.deployment_id }}'"
-
-          # otherwise, replace the existing deployment
-          else
-            echo "Replacing existing device deployment..."
-            az iot edge deployment delete \
-              --deployment-id ${{ env.deployment_id }} \
-              --hub-name ${{ github.event.inputs.iothub_name }}
-
-            az iot edge deployment create \
-              --deployment-id ${{ env.deployment_id }} \
-              --hub-name ${{ github.event.inputs.iothub_name }} \
-              --content temp.json \
-              --target-condition "tags.deployment='${{ env.deployment_id }}'"
-          fi
-
       - name: Create IoT Edge Device
         run: |
           # list existing devices
@@ -88,7 +43,6 @@ jobs:
           echo "Edge Device Registration"
           echo "-----------------------------------------"
           echo "Device ID:       ${{ github.event.inputs.edge_device_id }}"
-          echo "Deployment:      ${{ env.deployment_id }}"
           echo "Authentication:  shared_private_key"
           echo "-----------------------------------------"
 
@@ -105,9 +59,12 @@ jobs:
               --am shared_private_key
           fi
 
+          # Read the content of device-twins/twin_tags.json into a variable
+          tags=$(cat device-twins/twin_tags.json)
+
           # update the deployment tag as specified
           echo "Updating tags for target deployment..."
           az iot hub device-twin update \
             --hub-name ${{ github.event.inputs.iothub_name }} \
             --device-id ${{ github.event.inputs.edge_device_id }} \
-            --tags "{\"deployment\":\"${{ env.deployment_id }}\"}"
+            --tags "$tags"
