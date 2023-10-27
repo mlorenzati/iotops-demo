@@ -1,0 +1,85 @@
+name: Deploy Modules
+
+on:
+  workflow_dispatch:
+    inputs:
+      iothub_name:
+        description: The name of the IoT Hub.
+        required: true
+        default: "iotops-hub"
+      environment:
+        description: "Environment to deploy to"
+        required: true
+        default: "iotops-demo"
+
+env:
+  folder_path: "deployments/"
+
+jobs:
+  deploy:
+    name: Deploy Modules
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy Manifests
+        run: |
+          az config set extension.use_dynamic_install=yes_without_prompt
+
+          # iterate over all json files in the specified folder
+          for manifest in ${{ env.folder_path }}*.json
+          do
+            # extract the filename to use as the deployment id
+            deployment_id=$(basename "$manifest" .json)
+
+            echo "Deploying $manifest as $deployment_id..."
+
+            # list existing deployments
+            deployment_list=$(az iot edge deployment list --hub-name ${{ github.event.inputs.iothub_name }} | sed -nr 's/\s*"id": "(.*)".*/|\1|/p' )
+
+            echo "Edge Device Deployment"
+            echo "-----------------------------------------"
+            echo "Deployment:   $deployment_id"
+            echo "Modules:      $manifest"
+            echo "-----------------------------------------"
+
+            # check for matching (existing) deployments
+            matched=$( echo "${deployment_list}" | sed -nr "s|\|$deployment_id\||found/p" )
+
+            # if there's no match, create a new device deployment
+            if [ -z "$matched" ]; then
+              echo "Creating new edge device deployment..."
+              az iot edge deployment create \
+                --deployment-id "$deployment_id" \
+                --hub-name ${{ github.event.inputs.iothub_name }} \
+                --content "$manifest" \
+                --target-condition "tags.deviceType='TemperatureSensor'" \
+                --layered
+
+            # otherwise, replace the device deployment
+            else
+              echo "Replacing existing device deployment..."
+              az iot edge deployment delete \
+                --deployment-id "$deployment_id" \
+                --hub-name ${{ github.event.inputs.iothub_name }}
+
+              az iot edge deployment create \
+                --deployment-id "$deployment_id" \
+                --hub-name ${{ github.event.inputs.iothub_name }} \
+                --content "$manifest" \
+                --target-condition "tags.deviceType='TemperatureSensor'" \
+                --layered
+            fi
+          done
