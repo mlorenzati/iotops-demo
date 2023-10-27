@@ -4,20 +4,14 @@
         "sector": "Production",
         "area": "AssemblyLine1",
         "building": "ManufacturingPlant1",
-        "floor": "Floor1",
-        "room": "ControlRoom1"
+        "line": "Line1",
+        "machinery": "Boiler1"
     },
     "provider": "synapse",
     "iotEdgeCompatible": "true",
     "attestation": "symmetric",
-    "process": {
-        "stage": "monitoring",
-        "line": "Line1",
-        "machinery": "Boiler1"
-    },
     "safety": {
-        "compliance": "ISO 13485",
-        "hazard": "None"
+        "compliance": "ISO 13485"
     },
     "thresholds": {
         "highTemperature": 30.0,

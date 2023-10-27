@@ -1,0 +1,13 @@
+{
+    "status": "connected",
+    "modules": [
+        {
+            "name": "iot-edge-metrics-collector",
+            "version": "1.1.0"
+        },
+        {
+            "name": "temperature-sensor",
+            "version": "1.0.0"
+        }
+    ]
+}
