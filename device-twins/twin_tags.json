@@ -7,7 +7,7 @@
         "line": "Line1",
         "machinery": "Boiler1"
     },
-    "provider": "synapse",
+    "provider": "globant",
     "iotEdgeCompatible": "true",
     "attestation": "symmetric",
     "safety": {
