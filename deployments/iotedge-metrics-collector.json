@@ -16,7 +16,7 @@
                         "value": "fowHyqLV/tmpGFsod7xdRAA/A8d9+ntLV96R5shtqkUQIW2/ZI1lHzFHxz9v6nNeY9NYdXc6qqsNEUTwKS9PTQ=="
                     },
                     "ScrapeFrequencyInSecs": {
-                        "value": "600"
+                        "value": "60"
                     },
                     "MetricsEndpointsCSV": {
                         "value": "http://edgeAgent:9600/metrics, http://edgeHub:9600/metrics"
