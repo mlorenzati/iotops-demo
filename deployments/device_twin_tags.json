@@ -1,0 +1,30 @@
+{
+    "deviceType": "TemperatureSensor",
+    "location": {
+        "sector": "Production",
+        "area": "AssemblyLine1",
+        "building": "ManufacturingPlant1",
+        "floor": "Floor1",
+        "room": "ControlRoom1"
+    },
+    "provider": "synapse",
+    "iotEdgeCompatible": "true",
+    "attestation": "symmetric",
+    "process": {
+        "stage": "monitoring",
+        "line": "Line1",
+        "machinery": "Boiler1"
+    },
+    "safety": {
+        "compliance": "ISO 13485",
+        "hazard": "None"
+    },
+    "thresholds": {
+        "highTemperature": 30.0,
+        "lowTemperature": 10.0
+    },
+    "maintenance": {
+        "lastServiced": "2023-10-01",
+        "nextServiceDue": "2024-04-01"
+    }
+}
