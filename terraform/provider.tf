@@ -10,7 +10,7 @@ terraform {
     resource_group_name  = "iotops-demo"
     storage_account_name = "iotopstfstate"
     container_name       = "tfstate"
-    key                  = "iotops-terraform.tfstate"
+    key                  = "iotops-demo-terraform.tfstate"
   }
 }
 
