@@ -16,10 +16,15 @@ variable "diagnostic_setting_name" {
   default     = "iotops-diagnostic-setting"
 }
 
+resource "random_string" "random" {
+  length  = 6
+  special = false
+  upper   = false
+}
 variable "storage_account_name" {
   description = "The name of the Storage Account."
   type        = string
-  default     = "iotopsstorageaccount"
+  default     = "iotopsstorageaccount${random_string.random.result}"
 }
 
 variable "storage_container_name" {
@@ -31,5 +36,5 @@ variable "storage_container_name" {
 variable "location" {
   description = "The Azure Region where the resources will be created."
   type        = string
-  default     = "eastus2"
+  default     = "brazilsouth"
 }
