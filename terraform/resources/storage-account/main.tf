@@ -1,6 +1,15 @@
+# Random String for Storage Account Name
+resource "random_string" "random" {
+  length  = 6
+  special = false
+  upper   = false
+}
+locals {
+  storage_account_name = "iotopsstorageaccount${random_string.random.result}"
+}
 # Create a Storage Account
 resource "azurerm_storage_account" "storage_account" {
-  name                     = var.storage_account_name
+  name                     = local.storage_account_name
   resource_group_name      = var.resource_group_name
   location                 = var.location
   account_tier             = "Standard"

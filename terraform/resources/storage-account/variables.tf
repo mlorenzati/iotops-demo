@@ -8,11 +8,6 @@ variable "location" {
   type        = string
 }
 
-variable "storage_account_name" {
-  description = "The name of the Storage Account."
-  type        = string
-}
-
 variable "storage_container_name" {
   description = "The name of the Storage Container."
   type        = string

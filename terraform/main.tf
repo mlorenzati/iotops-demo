@@ -40,6 +40,5 @@ module "storage_account" {
   location               = var.location
   resource_group_name    = data.azurerm_resource_group.resource_group.name
   tags                   = local.common_tags
-  storage_account_name   = var.storage_account_name
   storage_container_name = var.storage_container_name
 }

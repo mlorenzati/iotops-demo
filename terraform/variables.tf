@@ -16,20 +16,6 @@ variable "diagnostic_setting_name" {
   default     = "iotops-diagnostic-setting"
 }
 
-resource "random_string" "random" {
-  length  = 6
-  special = false
-  upper   = false
-}
-locals {
-  storage_account_name = "iotopsstorageaccount${random_string.random.result}"
-}
-variable "storage_account_name" {
-  description = "The name of the Storage Account."
-  type        = string
-  default     = local.storage_account_name
-}
-
 variable "storage_container_name" {
   description = "The name of the Storage Container."
   type        = string
