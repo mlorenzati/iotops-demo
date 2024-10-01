@@ -12,7 +12,7 @@ terraform {
 
   backend "azurerm" {
     resource_group_name  = "iotops-demo"
-    storage_account_name = "iotopstfstate"
+    storage_account_name = "iotopstfstate2"
     container_name       = "tfstate"
     key                  = "iotops-demo-terraform.tfstate"
   }
