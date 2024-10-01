@@ -5,7 +5,7 @@ resource "random_string" "random" {
   upper   = false
 }
 locals {
-  storage_account_name = "iotopsstorageaccount${random_string.random.result}"
+  storage_account_name = "iotops${random_string.random.result}"
 }
 # Create a Storage Account
 resource "azurerm_storage_account" "storage_account" {
