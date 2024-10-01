@@ -36,7 +36,7 @@ jobs:
           echo "ARM_TENANT_ID=$(az account show --query="tenantId" -o tsv)" >> $GITHUB_ENV
 
       - name: "Initialize Terraform"
-        run: terraform init
+        run: terraform init --upgrade
 
       - name: "Terraform Plan"
         run: terraform plan -out=tfplan
