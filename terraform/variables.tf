@@ -21,10 +21,13 @@ resource "random_string" "random" {
   special = false
   upper   = false
 }
+locals {
+  storage_account_name = "iotopsstorageaccount${random_string.random.result}"
+}
 variable "storage_account_name" {
   description = "The name of the Storage Account."
   type        = string
-  default     = "iotopsstorageaccount${random_string.random.result}"
+  default     = local.storage_account_name
 }
 
 variable "storage_container_name" {
