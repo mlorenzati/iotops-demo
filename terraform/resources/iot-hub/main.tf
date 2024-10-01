@@ -9,6 +9,8 @@ resource "azurerm_iothub" "iothub" {
     capacity = "1"
   }
 
+  event_hub_partition_count = 2
+
   endpoint {
     type                       = "AzureIotHub.StorageContainer"
     connection_string          = var.primary_blob_connection_string
