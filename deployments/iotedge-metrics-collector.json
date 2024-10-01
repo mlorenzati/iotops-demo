@@ -4,16 +4,16 @@
             "properties.desired.modules.IoTEdgeMetricsCollector": {
                 "env": {
                     "ResourceId": {
-                        "value": "/subscriptions/a2c46bc1-e3b2-4553-b99d-56cd56794ed4/resourceGroups/iotops-demo/providers/Microsoft.Devices/IotHubs/iotops-hub"
+                        "value": "/subscriptions/c6784f9b-e3e4-46ae-881b-e57cd024627f/resourceGroups/iotops-demo/providers/Microsoft.Devices/IotHubs/iotops-hub"
                     },
                     "UploadTarget": {
                         "value": "AzureMonitor"
                     },
                     "LogAnalyticsWorkspaceId": {
-                        "value": "fd9e3be2-aa54-4baa-ad21-0cdd3e54b369"
+                        "value": "37d4220e-0fb4-4bcf-a208-7922d0598829"
                     },
                     "LogAnalyticsSharedKey": {
-                        "value": "QikEAHzGbfqJ0El73OrV/uReQZGAHPdZRz8HWvRoIqWdsszjFph6F5lfa4fkcjvNd1kHJ4VY9feqCupaio/MqQ=="
+                        "value": "UojUqYTJ9tu5hen7EXrJDuLQwmOOBWYemKFxMTn5NH3TElybdchbzSgv9Zr421aPnZ/2WsACnmkzNlnYuliypg=="
                     },
                     "ScrapeFrequencyInSecs": {
                         "value": "60"
